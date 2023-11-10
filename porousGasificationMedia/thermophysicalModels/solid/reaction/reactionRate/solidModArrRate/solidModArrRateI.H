@@ -67,7 +67,7 @@ inline Foam::scalar Foam::solidModArrRate::operator()
     }
     else
     {
-        ak *= pow(max(T - Tcrit_,0.),2./3.)*exp(-Ta_/T);
+        ak *= max(T ,0.)*exp(-Ta_/T);
     }
 
     return ak;
