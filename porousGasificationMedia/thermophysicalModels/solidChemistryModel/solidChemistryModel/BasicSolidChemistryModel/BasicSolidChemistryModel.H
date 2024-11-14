@@ -22,23 +22,26 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::BasicSolidChemistryModel
+    Foam::basicSolidChemistryModel
 
 Description
-    Basic chemistry model templated on thermodynamics
+    Base class for chemistry models
 
 SourceFiles
-    BasicChemistryModelI.H
-    BasicSolidChemistryModel.C
+    basicChemistryModelI.H
+    basicSolidChemistryModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef BasicSolidChemistryModel_H
-#define BasicSolidChemistryModel_H
+#ifndef basicSolidChemistryModel_H
+#define basicSolidChemistryModel_H
 
-#include "basicSolidChemistryModel.H"
-#include "autoPtr.H"
-#include "runTimeSelectionTables.H"
+#include "IOdictionary.H"
+#include "Switch.H"
+#include "scalarField.H"
+#include "volFields.H"
+#include "HGSSolidThermo.H"
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,107 +52,136 @@ namespace Foam
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                     class BasicSolidChemistryModel Declaration
+                   class basicSolidChemistryModel Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class SolidThermo>
-class BasicSolidChemistryModel
+class basicSolidChemistryModel
 :
-    public basicSolidChemistryModel
+    public IOdictionary
 {
 protected:
 
     // Protected data
 
-        //- Thermo
-        const SolidThermo& solidThermo_;
+        //- Reference to the mesh database
+        const fvMesh& mesh_;
+
+        //- Chemistry activation switch
+        Switch chemistry_;
+
+        //- Initial chemical time step
+        const scalar deltaTChemIni_;
+
+        //- Maximum chemical time step
+        const scalar deltaTChemMax_;
+
+        //- Latest estimation of integration step
+        volScalarField::Internal deltaTChem_;
+
+
+    // Protected Member Functions
+
+        //- Return non-const access to the latest estimation of integration
+        //  step, e.g. for multi-chemistry model
+        inline volScalarField::Internal& deltaTChem();
+
+        //- Correct function - updates due to mesh changes
+        void correct();
 
 
 public:
 
     //- Runtime type information
-    TypeName("BasicSolidChemistryModel");
-
-
-    //- Thermo type
-    typedef SolidThermo reactionThermo;
-
-
-    //- Declare run-time constructor selection tables
-    declareRunTimeSelectionTable
-    (
-        autoPtr,
-        BasicSolidChemistryModel,
-        thermo,
-        (
-            const SolidThermo& thermo,
-            PtrList<volScalarField>& gasPhaseGases
-        ),
-        (thermo, gasPhaseGases)
-    );
+    TypeName("basicSolidChemistryModel");
 
 
     // Constructors
 
         //- Construct from thermo
-        BasicSolidChemistryModel(const SolidThermo& thermo);
+        basicSolidChemistryModel(const HGSSolidThermo& thermo);
 
-    //- Selector
-    static autoPtr<BasicSolidChemistryModel<SolidThermo>> New
-    (
-        const SolidThermo& thermo,
-        PtrList<volScalarField>& gasPhaseGases,
-        const word thermoName
-    );
+        //- Construct as copy (not implemented)
+        basicSolidChemistryModel(const basicSolidChemistryModel&);
+
+
+    // Selectors
+
+        //- Generic New for each of the related chemistry model
+        template<class ChemistryModel>
+        static autoPtr<ChemistryModel> New
+        (
+            const typename ChemistryModel::reactionThermo& thermo,
+            PtrList<volScalarField>& gasPhaseGases,
+            const word thermoName
+        );
 
 
     //- Destructor
-    virtual ~BasicSolidChemistryModel();
+    virtual ~basicSolidChemistryModel();
 
 
     // Member Functions
 
-        //- Return access to the solid thermo package
-        //inline SolidThermo& solidThermo();
+        //- Return const access to the mesh database
+        inline const fvMesh& mesh() const;
 
-        //- Return access to the solid's thermo package
-        inline const SolidThermo& solidThermo() const;
+        //- Chemistry activation switch
+        inline Switch chemistry() const;
 
-        //- Return total solids mass source term [kg/m3/s]
-        virtual tmp<volScalarField> RRs() const = 0;
+        //- The number of species
+        virtual label nSpecie() const = 0;
 
-        //- Return total gases mass source term [kg/m3/s]
-        virtual tmp<volScalarField> RRg() const = 0;
+        //- The number of reactions
+        virtual label nReaction() const = 0;
 
-        //- Return chemical source terms for solids [kg/m3/s]
-        virtual tmp<volScalarField> RRs(const label i) const = 0;
+        //- Return the latest estimation of integration step
+        inline const volScalarField::Internal& deltaTChem() const;
 
-        //- Return chemical source terms for gases [kg/m3/s]
-        virtual tmp<volScalarField> RRg(const label i) const = 0;
 
-        //- Return sensible enthalpy for gas i [J/Kg]
-        virtual tmp<volScalarField> gasHs
-        (
-            const volScalarField& p,
-            const volScalarField& T,
-            const label i
-        ) const = 0;
+        // Functions to be derived in derived classes
 
-        //- Return source for enthalpy equation [kg/m/s3]
-        virtual tmp<volScalarField> Sh() const = 0;
+            // Fields
 
-        //- Return specie Table for gases
-        virtual const speciesTable& gasTable() const = 0;
+                //- Return const access to chemical source terms [kg/m^3/s]
+                virtual const volScalarField::Internal& RR
+                (
+                    const label i
+                ) const = 0;
 
-        //- Set reacting status of cell, cellI
-        virtual void setCellReacting(const label cellI, const bool active) = 0;
+                //- Return access to chemical source terms [kg/m^3/s]
+                virtual volScalarField::Internal& RR
+                (
+                    const label i
+                ) = 0;
 
-        //- Calculates the reaction rates
-        virtual void calculate() = 0;
+                //- Return reaction rate of the speciei in reactioni
+                virtual tmp<volScalarField::Internal> calculateRR
+                (
+                    const label reactioni,
+                    const label speciei
+                ) const = 0;
 
-        //- Return source for porosity equation [1/s]
-        virtual tmp<volScalarField> RRpor(const volScalarField T) const = 0;
 
+            // Chemistry solution
+
+                //- Calculates the reaction rates
+                virtual void calculate() = 0;
+
+                //- Solve the reaction system for the given time step
+                //  and return the characteristic time
+                virtual scalar solve(const scalar t0, const scalar deltaT) = 0;
+
+                //- Return the chemical time scale
+                virtual tmp<volScalarField> tc() const = 0;
+
+                //- Return the heat release rate [kg/m/s^3]
+                virtual tmp<volScalarField> Qdot() const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const basicSolidChemistryModel&) = delete;
 };
 
 
@@ -159,11 +191,11 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#ifdef NoRepository
-    #include "BasicSolidChemistryModel.C"
-#endif
+#include "basicSolidChemistryModelI.H"
 
-#include "BasicSolidChemistryModelI.H"
+#ifdef NoRepository
+    #include "basicSolidChemistryModelTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

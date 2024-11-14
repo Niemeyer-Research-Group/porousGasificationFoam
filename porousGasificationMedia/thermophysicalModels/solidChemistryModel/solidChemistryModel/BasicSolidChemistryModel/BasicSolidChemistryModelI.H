@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,15 +23,31 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "BasicSolidChemistryModel.H"
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class SolidThermo>
-inline const SolidThermo&
-Foam::BasicSolidChemistryModel<SolidThermo>::solidThermo() const
+inline const Foam::fvMesh& Foam::basicSolidChemistryModel::mesh() const
 {
-    return solidThermo_;
+    return mesh_;
+}
+
+
+inline Foam::Switch Foam::basicSolidChemistryModel::chemistry() const
+{
+    return chemistry_;
+}
+
+
+inline const Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
+Foam::basicSolidChemistryModel::deltaTChem() const
+{
+    return deltaTChem_;
+}
+
+
+inline Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
+Foam::basicSolidChemistryModel::deltaTChem()
+{
+    return deltaTChem_;
 }
 
 

@@ -8,7 +8,7 @@
 License
     This file is part of OpenFOAM.
 
-    OpenFOAM is free basftware: you can redistribute it and/or modify it
+    OpenFOAM is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
@@ -23,43 +23,61 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "BasicSolidChemistryModel.H"
+#include "basicSolidChemistryModel.H"
+#include "fvMesh.H"
+#include "Time.H"
+
+/* * * * * * * * * * * * * * * private static data * * * * * * * * * * * * * */
+
+namespace Foam
+{
+    defineTypeNameAndDebug(basicSolidChemistryModel, 0);
+}
+
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+void Foam::basicSolidChemistryModel::correct()
+{}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class SolidThermo>
-Foam::BasicSolidChemistryModel<SolidThermo>::BasicSolidChemistryModel
-(
-    const SolidThermo& thermo
-)
+Foam::basicSolidChemistryModel::basicSolidChemistryModel(const HGSSolidThermo& thermo)
 :
-    basicSolidChemistryModel(thermo),
-    solidThermo_(thermo)
+    IOdictionary
+    (
+        IOobject
+        (
+            "chemistryProperties",
+            thermo.db().time().constant(),
+            thermo.db(),
+            IOobject::MUST_READ_IF_MODIFIED,
+            IOobject::NO_WRITE
+        )
+    ),
+    mesh_(thermo.T().mesh()),
+    chemistry_(lookup("chemistry")),
+    deltaTChemIni_(lookup<scalar>("initialChemicalTimeStep")),
+    deltaTChemMax_(lookupOrDefault("maxChemicalTimeStep", great)),
+    deltaTChem_
+    (
+        IOobject
+        (
+            "deltaTChem",
+            mesh().time().constant(),
+            mesh(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        ),
+        mesh(),
+        dimensionedScalar(dimTime, deltaTChemIni_)
+    )
 {}
 
-
-// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
-
-template<class SolidThermo>
-Foam::autoPtr<Foam::BasicSolidChemistryModel<SolidThermo>>
-Foam::BasicSolidChemistryModel<SolidThermo>::New
-(
-    const SolidThermo& thermo,
-    PtrList<volScalarField>& gasPhaseGases,
-    const word thermoName
-)
-{
-    return basicSolidChemistryModel::New<BasicSolidChemistryModel<SolidThermo>>
-    (
-        thermo,
-        gasPhaseGases,
-        thermoName
-    );
-}
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class SolidThermo>
-Foam::BasicSolidChemistryModel<SolidThermo>::~BasicSolidChemistryModel()
+Foam::basicSolidChemistryModel::~basicSolidChemistryModel()
 {}
+
 
 // ************************************************************************* //
