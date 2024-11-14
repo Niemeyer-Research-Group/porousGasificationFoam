@@ -1,0 +1,54 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  8
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    location    "0";
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// flow rate = 250 NL/min = 873/273 * 250 /60 *1e-3 m3/s
+// A = 0.1^2 * pi /4 
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 1.6965);
+
+boundaryField
+{
+    walls
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+    inlet
+    {
+        type            fixedValue;
+        value           uniform (0 0 1.6965);
+    }
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      uniform (0 0 0);
+        value           uniform (0 0 0);
+    }
+	wedge0
+    {
+        type            wedge;
+    }
+	wedge1
+    {
+        type            wedge;
+    }
+}
+
+
+// ************************************************************************* //

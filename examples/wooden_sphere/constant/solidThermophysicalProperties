@@ -1,0 +1,740 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  8
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      solidThermophysicalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+thermoType solidMixtureThermo<constHeterogeneous>;
+
+solidComponents
+(
+    CELL CELLA CHAR HECELL HCE1 HCE2 XYLAN LIGCC LIGH LIGOH LIGC LIGO LIG TGL CTANN ITANN HUM GCH4 GH2 GCO GCO2 GC2H4 GCH3OH GCH2O 
+);
+
+CELLCoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+		
+    }
+    thermodynamics
+    {
+        Cp          1800;
+		//C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          0.0;
+    }
+    density
+    {
+      rho          1518.0;
+    }
+};
+
+CELLACoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800;
+    }
+    density
+    {
+      rho          1518.0;
+    }
+};
+
+HECELLCoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800;
+    }
+    density
+    {
+      rho          1518.0;
+    }
+};
+
+HCE1Coeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800;
+    }
+    density
+    {
+      rho          1518.0;
+    }
+};
+
+HCE2Coeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800;
+    }
+    density
+    {
+      rho          1518.0;
+    }
+};
+
+XYLANCoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800;
+    }
+    density
+    {
+      rho          1600.0;
+    }
+};
+
+LIGCoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800.0;
+    }
+    density
+    {
+      rho          1518.0;
+    }
+};
+
+LIGOHCoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800.0;
+    }
+    density
+    {
+      rho          1518.0;
+    }
+};
+
+LIGCCoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800.0;
+    }
+    density
+    {
+      rho          1518.0;
+    }
+};
+
+LIGCCCoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800.0;
+    }
+    density
+    {
+      rho          1518.0;
+    }
+};
+
+LIGOCoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800.0;
+    }
+    density
+    {
+      rho          1518.0;
+    }
+};
+
+LIGHCoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800.0;
+    }
+    density
+    {
+      rho          1518.0;
+    }
+};
+
+ANISOLECoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800.0;
+    }
+    density
+    {
+      rho          995.0;
+    }
+};
+
+TGLCoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800.0;
+    }
+    density
+    {
+      //rho          1500.0;
+	  rho          1518;
+    }
+};
+
+ACROLEINCoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800.0;
+    }
+    density
+    {
+      rho          839.0;
+    }
+};
+
+LACIDCoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800.0;
+    }
+    density
+    {
+      rho          900.0;
+    }
+};
+
+CTANNCoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800.0;
+    }
+    density
+    {
+      rho          1518.0;
+    }
+};
+
+ITANNCoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800.0;
+    }
+    density
+    {
+      rho          1518.0;
+    }
+};
+
+HUMCoeffs
+{
+    transport
+    {
+        K           0.6; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          4188.0;
+    }
+    density
+    {
+      rho          1000.0;
+    }
+};
+
+//rhoch4 #calc "0.0101350128633761*16.0";
+//rhoh2  #calc "0.0806563778419628*2.0";
+
+GCH4Coeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A             1;
+    }
+    thermodynamics
+    {
+        C00          1500.0;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800;
+    }
+    density
+    {
+      //rho          0.1625;
+	  rho          1518;
+    }
+};
+
+
+GH2Coeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp           1800;
+    }
+    density
+    {
+      //rho          0.1625;
+	  rho          1518;
+    }
+};
+
+GCOCoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp           1800;
+    }
+    density
+    {
+      //rho          0.1625;
+	  rho          1518;
+    }
+};
+
+GCO2Coeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp           1800;
+    }
+    density
+    {
+      //rho          0.1625;
+	  rho          1518;
+    }
+};
+
+GC2H4Coeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp           1800;
+    }
+    density
+    {
+      //rho          0.1625;
+	  rho          1518;
+    }
+};
+
+GCH3OHCoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp           1800;
+    }
+    density
+    {
+      //rho          0.1625;
+	  rho          1518;
+    }
+};
+
+GCH2OCoeffs
+{
+    transport
+    {
+        K           0.2; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .594;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          1500.;
+		Tref		1.0;
+		C0			1.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1800;
+    }
+    density
+    {
+      //rho          0.1625;
+	  rho          1518;
+    }
+};
+
+CHARCoeffs
+{
+    transport
+    {
+        K           0.07; //heat transfer coefficient
+		Tref		 300.0;
+		n0			 .435;
+		K1           0.0;
+		n1           1.0;
+		A            1;
+    }
+    thermodynamics
+    {
+        C00          700.0;
+		Tref		1.0;
+		C0			35.0;
+		n0          1.0;
+        Hf          1.0;
+		Cp          1750;
+    }
+    density
+    {
+      //rho          300.0;
+	  rho          1518;
+    }
+};
+
+// ************************************************************************* //

@@ -1,0 +1,315 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  8
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      solidThermophysicalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#includeEtc "caseDicts/solvers/chemistry/TDAC/chemistryProperties.cfg"
+
+chemistry           on;
+
+chemistryType
+{
+    solver            ode;
+	method            TDAC;
+}
+/*
+importantSpecies
+{
+ CO2 ;
+ H2O ;
+ C2H4 ;
+ CH2O;
+ CH4;
+ O2 ;
+ }
+ */
+odeCoeffs
+{
+    solver          Rosenbrock34;
+	//solver 			rodas23;
+	//solver 			seulex;
+    absTol          1e-8;
+    relTol          0.01;
+}
+
+reduction
+{
+    tolerance   1e-4;
+	initialSet
+	{
+		CO ;
+		C2H4 ;
+		HO2 ;
+	}
+
+	automaticSIS on;
+	/*
+	fuelSpecies
+	{
+	C2H4 1;
+	CH4 1;
+	CH2O 1;
+	C6H5OH 1;
+	}
+	*/
+}
+
+tabulation
+{
+    tolerance   3e-3;
+}
+
+solidChemistryType
+{
+    solver              solidOde;
+    method              ODESolidHeterogeneousChemistryModel;
+    solidThermoType     const<constRad<constThermo<constRho>>>;
+}
+
+chemistrySolver     ode;
+
+
+solidChemistrySolver	solidOde;
+
+initialChemicalTimeStep 1e-7;
+
+turbulentReaction   off;
+solidReactionEnergyFromEnthalpy false;
+stoichiometricReactions off;
+showRelativeReactionRates false;
+
+solidChemistryTimeStepControl true;
+/*
+odeCoeffs
+{
+    solver          seulex;
+}
+*/
+solidOdeCoeffs
+{
+
+   solver      seulex;
+   absTol          1e-8;
+   relTol          0.01;
+}
+
+/*
+species
+(
+    //N2 C2H4O2 C2H2O2 C2H5CHO CH3OH CH2O CO CO2 H2O HCOOH H2 CH4 C6H10O5 C6H6O3 CH3CHO C2H5OH C2H4 C9H10O2 C6H5OH C11H12O4 O2
+	//N2 O2 H2 H2O H2O2 CO CO2 CH2O HCOOH HCO3H CH4 CH3OH CH3OOH C2H2 CH2CO C2H2O2 C2H4 C2H4O CH3CHO C2H4O2 C2H6 C3H2 AC3H4 PC3H4 C2H3CHO C3H4O3 C3H6 C3H6O C3H6O2 C4H4 C4H6O2 C5H4O2 CYC5H6 C6H5OH C6H6O3 C6H8O4 C6H10O5 C8H10O3 C9H10O2 C10H8 C11H12O4 O H OH HO2 C CH HCO HCO3 CH2S CH2 CH3 CH2OH CH3O CH3OO C2H HCCO C2H3 CH3CO CH2CHO C2H5 C2H4OH C2H5OO C2-QOOH C3H3 CH2CHCH2 CH3COCH2 C4H3O CYC5H5 C6H5 C6H5O C2H5CHO C2H5OH 
+
+);
+*/
+species
+45
+(
+CH4
+CH2O
+CH3O
+H
+O2
+H2
+O
+OH
+H2O
+HO2
+H2O2
+C
+CH
+CH2
+CH2(S)
+CH3
+CO
+CO2
+HCO
+CH2OH
+CH3OH
+C2H
+C2H2
+C2H3
+C2H4
+C2H5
+C2H6
+HCCO
+CH2CO
+HCCOH
+N2
+C3H7
+C3H8
+CH2CHO
+CH3CHO
+C2H4O2
+C2H2O2
+C2H5CHO
+C6H10O5
+C6H6O3
+C2H5OH
+C9H10O2
+C6H5OH
+C11H12O4
+HCOOH
+);
+
+
+ //mass based
+solidReactions
+(
+	
+    irreversibleSolidArrheniusHeterogeneousReaction
+    CELL = CELLA 
+    (1.5e14 23652.63 302 -33.5753086419753e3 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+    CELLA = 0.1667 C2H4O2 + 0.0716 C2H2O2 + 0.0272 CH3CHO + 0.1944 C6H6O3 + 0.1074 C2H5CHO + 0.0296 CH3OH + 0.0741 CH2O + 0.0536 CO + 0.1103 CO2 + 0.00062 H2 + 0.0922 H2O + 0.0057 HCOOH + 0.0198 GCH4 + 0.00158000000000029 GH2 + 0.0452 CHAR 
+    (2.0e6 9612.027905 302 699.916049382716e3 1)
+	
+	irreversibleSolidModArrHeterogeneousReaction
+    CELLA = C6H10O5
+    (4.0 5032.475343 0 599.190123456790e3 1)
+	
+	//irreversibleSolidArrheniusHeterogeneousReaction
+    //CELLA = C6H10O5
+    //(2000 5032.475343 302 599.190123456790e3 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+    CELL = 0.5556 H2O + 0.4444 CHAR 
+    (6.5e7 15600.67356 302 -1619.36296296296e3 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+	HECELL = 0.58 HCE1 + 0.42 HCE2
+	(1.0e10 15600.67356 302 -158.4848e3 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+	HCE1 = 0.0034 H2O + 0.1667 CO2 + 0.0087 HCOOH + 0.1061 CO + 0.1818 CH2O + 0.0436 C2H5OH + 0.0242 CH3OH + 0.0530 C2H4 + 0.0019 GH2 + 0.0917 GCO2 + 0.0909 GCH2O + 0.1091 GCH3OH + 0.0394 GCH4 + 0.0795 CHAR
+	(1.2e9 1.5097e4 302 -15.8485e3 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+	HCE1 = 0.0341 H2O + 0.2667 CO2 + 0.0174 HCOOH + 0.0212 CO + 0.0318 GCO + 0.0682 CH2O + 0.0030 GH2 + 0.05 GCO2 + 0.2727 GCH2O + 0.0758 GCH4 + 0.0796 CHAR + 0.0795 GC2H4
+	(0.15 4.0260e3 302 -1.3440e6 1)
+	
+	irreversibleSolidModArrHeterogeneousReaction
+    //HCE1 = XYLAN
+	HCE1 = C2H5OH
+    (3.0 5.5357e3 0 567.3758e3 1)
+	
+	//irreversibleSolidArrheniusHeterogeneousReaction
+	//HCE1 = C2H5OH
+    //(1500 5.5357e3 302 567.3758e3 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+	HCE2 = 0.0273 H2O + 0.0919 CO2 + 0.0087 HCOOH + 0.0371 CO + 0.1136 CH2O + 0.0348 C2H5OH + 0.0909 C2H4O2 + 0.1333 GCO2 + 0.2102 GCH2O + 0.0727 GCH3OH + 0.0303 GCH4 + 0.0583 GC2H4 + 0.0909 CHAR
+	(5.0e9 1.6607e4 302 380.3636e3 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+	LIGC = 0.0698 H2O + 0.0347 CO + 0.0349 CH2O + 0.0445 C2H4 + 0.35 LIGCC + 0.0581 C9H10O2 + 0.0291 C6H5OH + 0.0814 GCH2O + 0.0307 GCH4 + 0.2668 CHAR
+	(1.33e15 2.4408e4 302 -167.0357e3 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+	LIGH = 0.867 LIGOH + 0.0665 C2H5CHO + 0.0321 C2H4 + 0.0344 C2H4O2
+	(6.7e12 1.8872e4 302 294.6073e3 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+	LIGO = 0.8957 LIGOH + 0.1043 CO2
+	(3.3e8 1.2833e4 302 257.7820e3 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+	LIGCC = 0.0488 H2O + 0.0434 CO + 0.0814 C2H4O2 + 0.1744 C9H10O2 + 0.0729 C6H5OH + 0.1163 GCH2O + 0.0403 GCH4 + 0.3140 CHAR + 0.0651 GC2H4 + 0.0434 GCO
+	(1.67e6 1.5852e4 302 -504.3504e3 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+	LIGOH = 0.5503 LIG + 0.0429 H2O + 0.0042 CH4 + 0.0508 CH3OH + 0.0058709 CO2 + 0.0061 HCOOH + 0.0407 CO + 0.0675 GCH2O + 0.0254 GCH3OH + 0.0148 GCH4 + 0.0148 GC2H4 + 5.291e-4 GH2 + 0.0444 GCO + 0.1317 CHAR
+	(1.0e8 1.5097e4 302 -288.8952e3 1)
+	
+	irreversibleSolidModArrHeterogeneousReaction
+    //LIG = 0.00336 C11H12O4 + 0.0014 C6H5CH2OH + 0.00144 CO + 0.0404 GCO + 0.00144 CH3CHO
+	LIG = 0.7000 C11H12O4 + 0.1557 C2H5OH + 0.0404 CO + 0.0404 GCO + 0.0635 CH3CHO
+    (4.0 6.0390e3 0 929.3308e3 1)
+	
+	//irreversibleSolidArrheniusHeterogeneousReaction
+	//LIG = 0.7000 C11H12O4 + 0.1557 C2H5OH + 0.0404 CO + 0.0404 GCO + 0.0635 CH3CHO
+    //(2000 6.0390e3 302 929.3308e3 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+	LIG = 0.0822 H2O + 0.1346 CO + 0.0288 CH2O + 0.0558 C2H5CHO + 0.0615 CH3OH + 0.0154 CH4 + 0.0111 HCOOH + 0.0423 CH3CHO + 0.0606 GCO + 0.0721 GCH2O + 0.03077 GCH4 + 0.0875 GC2H4 + 0.31733 CHAR
+	(4.0e8 1.5097e4 0 -424.4346e3 1)
+	
+	irreversibleSolidModArrHeterogeneousReaction
+	LIG = 0.0519 H2O + 0.0538 CO + 0.0577 CH2O + 0.0154 CH4 + 0.0269 GCO + 0.2885 GCH2O + 0.03076 GCH4 + 0.0673 GC2H4 +0.06154 GCH3OH + 0.3462 CHAR
+	(8.3e-2 4.026e3 0 -1.6816e6 1)
+	
+	//irreversibleSolidArrheniusHeterogeneousReaction
+	//LIG = 0.0519 H2O + 0.0538 CO + 0.0577 CH2O + 0.0154 CH4 + 0.0269 GCO + 0.2885 GCH2O + 0.03076 GCH4 + 0.0673 GC2H4 +0.06154 GCH3OH + 0.3462 CHAR
+	//(41.5 4.026e3 302 -1.6816e6 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+    //TGL = 0.0625 ACROLEIN + 0.9375 LACID 
+	TGL = C2H5OH
+    (7.0e12 2.2998e4 302 6.0705e3 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+    CTANN = 0.3092 C6H5OH + 0.6908 ITANN 
+    (50.0 5.5357e3 302 17.8921e3 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+    ITANN = 0.3429 CHAR + 0.4000 CO + 0.2571 H2O 
+    (0.015 3.0698e3 302 201.2305e3 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+    GCO2 = CO2 
+    (1.0e6 1.2078e4 302 -2.7671e6 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+    GCO = CO 
+    (5.0e12 2.5162e4 302 -2.0023e6 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+    GCH2O = 0.9333 CO + 0.0667 H2
+    (5.0e11 3.5731e4 302 6.7781e6 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+    GH2 = H2 
+    (5.0e11 37743.56507 302 0 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+    GCH4 = CH4 
+    (5.0e12 36066.24104 302 0 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+    GCH3OH = CH3OH
+    (2.0e12 2.5162e4 302 0 1)
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+    GC2H4 = C2H4
+    (5.0e12 3.6066e4 302 0 1)
+	
+	irreversibleSolidModArrHeterogeneousReaction
+    HUM = H2O
+    (1 3.8468e3 0 2.41e6 1)   
+    //irreversibleSolidArrheniusHeterogeneousReaction
+    //HUM = H2O
+    //(1.36e1 6.0e3 300.1 2.41e6 1) 
+	
+	irreversibleSolidArrheniusHeterogeneousReaction
+	CHAR + 3.6 CO2 = 4.6 CO 
+	(34.9 1.25e4 302 -1.72e5 1 1)
+   
+
+);
+
+//#include "reactions"
+#include "reactionsGRI"
+// ************************************************************************* //
+
+

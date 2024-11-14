@@ -1,3 +1,0 @@
-cellSet porosity new boxToCell (0.049 -0.03 -0.03) (0.069 0.03 0.03)
-cellZoneSet porosity new setToCellZone porosity
-quit
