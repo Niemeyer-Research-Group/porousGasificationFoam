@@ -48,11 +48,16 @@ int main(int argc, char *argv[])
 
 Info<<"Writing modified porosityF, Df and anisotropyK \n"<<endl;
 
+Info<<porosityF[0]<<endl;
+Info<<vv<<endl;
+
 porosityF.write();
 Df.write();
-anisotropyK.write();
+//anisotropyK.write();
+Info<<Df[3679].xx()<<endl;
     
 Info<< "End\n" << endl;
+
 
 return 0;
 }

@@ -32,67 +32,94 @@ Description
 // volVectorField containig coordinates of cell centers
 const volVectorField& Ccells = porosityF.mesh().C();
 
+double h = 0.01;
+//double h = 0.0025;
+double dp = h/20;
+scalar ep = 1e-6;
+
 // loop over cells containing logical conditions for porosity shape and value
 forAll(Ccells, celli)
 {
-
+  porosityF[celli] = 0.875;
 // Example: const value in whole space.
-// porosityF[celli]=0.46;
+   //porosityF[celli]=0.46;
+   //porosityF[0]=0.46;
 
 // Example: a half plane x < 0.
-    if ((Ccells[celli].x() < 0.1) && (Ccells[celli].x() > -0.1) && (Ccells[celli].y() < 0.1)
-        && (Ccells[celli].y() > -0.1) && (Ccells[celli].z() < 0.0) && (Ccells[celli].z() > -0.1))
-    {
-        porosityF[celli] = 0.6;
-    }
-    else
-    {
-        porosityF[celli] = 1.0;
-    }
-
+    //if ((Ccells[celli].x() < 0.1) && (Ccells[celli].x() > -0.1) && (Ccells[celli].y() < 0.1)
+    //    && (Ccells[celli].y() > -0.1) && (Ccells[celli].z() < 0.0) && (Ccells[celli].z() > -0.1))
+    //{
+    //    porosityF[celli] = 0.6;
+    //}
+    //else
+    //{
+      //  porosityF[celli] = 1.0;
+    //}
+  
+  if ((Ccells[celli].y() > (h-3.0*dp)-ep) && (Ccells[celli].y() < h))
+  {
+	porosityF[celli] = (1.0-0.875)/(3.0*dp)*(Ccells[celli].y()-h)+1.0;
+  }
+  //else if (Ccells[celli].y() < (h-3.0*dp))
+  //{
+	//porosityF[celli] = 0.875;
+  //}
+  //else
+  //{
+	//porosityF[celli] = 1.0;
+  //}
+  
+  if (Ccells[celli].y() > h){
+	  porosityF[celli] = 1.0;
+  }
+  
+  if (Ccells[celli].y() < 0){
+	  porosityF[celli] = .875;
+  }
+  
 }
+
 
 
 // Base vectors of the local coordinate system in which porosity tensor is diagonal
 // v1 - x, v2 - y, v3 = v1xv2
-vector v1;
-vector v2;
-vector v3;
 
-v1.x() = 1;
-v1.y() = 0;
-v1.z() = 0;
-
-v2.x() = 0;
-v2.y() = 1;
-v2.z() = 0;
-
-// Normalization.
-v1 = v1 / mag(v1);
-v2 = v2 / mag(v2);
-
-
-v3 = v1 ^ v2;
-
-// Matrix of transformation to local coordinate system.
-tensor T_loc(v1,v2,v3);	
 
 // Porosity tensor in local coordinates (chosen for porosity tensor to be diagonal).
-tensor D_loc(0, 0, 0, 0, 0, 0, 0, 0, 0);
-tensor anisotropyK_loc(0, 0, 0, 0, 0, 0, 0, 0, 0);
-
+tensor D_loc(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+//tensor anisotropyK_loc(0, 0, 0, 0, 0, 0, 0, 0, 0);
+scalar vv = 1/(Foam::pow((1.0-Foam::pow((1.0-.875),(1.0/3))),3.0)*(1.0+Foam::pow((1.0-.875),(1.0/3)))/(11.4*(1.0-.875))*Foam::pow(dp,2.0));
 forAll(Ccells,celli){
-    D_loc.xx() = 16e8;
-    D_loc.yy() = 16e8;
-    D_loc.zz() = 16e8;
-
-    anisotropyK_loc.xx() = 1;
-    anisotropyK_loc.yy() = 1;
-    anisotropyK_loc.zz() = 1;
+    //D_loc.xx() = 16e8;
+    //D_loc.yy() = 16e8;
+    //D_loc.zz() = 16e8;
+	if ((porosityF[celli] < 1.0) && (porosityF[celli] > 0.0)){
+	if (Ccells[celli].y() < h)
+	{
+		double a = 1/(Foam::pow((1.0-Foam::pow((1.0-porosityF[celli]),(1.0/3))),3.0)*(1.0+Foam::pow((1.0-porosityF[celli]),(1.0/3)))/(11.4*(1.0-porosityF[celli]))*Foam::pow(dp,2.0))*1.5;
+		D_loc.xx() = a;
+		D_loc.yy() = a;
+		D_loc.zz() = a;
+		Df[celli] = (D_loc);
+		//Df[celli] = tensor (a, 0.0, 0.0, 0.0, a, 0.0, 0.0, 0.0, a);
+	}
+	
+    //anisotropyK_loc.xx() = 1;
+    //anisotropyK_loc.yy() = 1;
+    //anisotropyK_loc.zz() = 1;
 
     // Transformation of porosity tensor to normal base in cartesian coordinates.
-    Df[celli] = (T_loc & D_loc & T_loc.T());
-    anisotropyK[celli] = (T_loc & anisotropyK_loc & T_loc.T());
+    //Df[celli] = (T_loc & D_loc & T_loc.T());
+	
+    //anisotropyK[celli] = (T_loc & anisotropyK_loc & T_loc.T());
+	//anisotropyK[celli] = anisotropyK_loc;
+}
 }
 
+//const fvPatchScalarField& tbp = porosityF.boundaryField()[porosityF.mesh().boundaryMesh().findPatchID("top")];
+//forAll(tbp, celli){
+//	tbp[celli] = 1.0;
+//}
+
+porosityF.correctBoundaryConditions();
 Df.correctBoundaryConditions();
