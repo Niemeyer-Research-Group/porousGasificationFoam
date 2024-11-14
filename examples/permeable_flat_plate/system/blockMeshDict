@@ -1,0 +1,134 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  8
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1e-2;
+
+vertices
+(
+    (0 0 0)
+    (3 0 0)
+    (3 1 0)
+    (0 1 0)
+    (0 0 1)
+    (3 0 1)
+    (3 1 1)
+    (0 1 1)
+    (3 2 0)
+    (0 2 0)
+    (3 2 1)
+    (0 2 1)
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (150 50 1) simpleGrading (1 1 1) /* (1
+	(
+	  (.5 .5 8)
+	  (.5 .5 .2)
+	)
+	1)*/
+	hex (3 2 8 9 7 6 10 11) (150 50 1) simpleGrading (1 1 1) /*(1
+	(
+	  (.5 .5 8)
+	  (.5 .5 .2)
+	)
+	1)*/
+);
+
+edges
+(
+);
+
+boundary
+(
+    top
+    {
+        type wall;
+        faces
+        (
+            (9 8 10 11)
+        );
+    }
+    bottom
+    {
+        type wall;
+        faces
+        (
+            (1 5 4 0)
+        );
+    }
+    inlet
+    {
+        type cyclic;
+		neighbourPatch    outlet;
+        faces
+        (
+            //(0 4 7 3)
+			(3 7 11 9)
+        );
+    }
+	
+	inlet_porous
+    {
+        type cyclic;
+		neighbourPatch    outlet_porous;
+        faces
+        (
+            (0 4 7 3)
+			//(3 7 11 9)
+        );
+    }
+	
+    outlet
+    {
+        type cyclic;
+		neighbourPatch  inlet;
+        faces
+        (
+            (8 10 6 2)
+			//(1 2 6 5)
+        );
+    }
+	
+	outlet_porous
+    {
+        type cyclic;
+		neighbourPatch  inlet_porous;
+        faces
+        (
+            //(8 10 6 2)
+			(1 2 6 5)
+        );
+    }
+	
+    frontAndBack
+    {
+        type empty;
+        faces
+        (
+            (0 3 2 1)
+			(3 9 8 2)
+            (4 5 6 7)
+			(7 6 10 11)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //
